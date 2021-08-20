@@ -1,4 +1,6 @@
-//Github link:https://github.com/Venura-Hewage/Multiple-Inputs-Board
+//Github link: https://github.com/Venura-Hewage/Multiple-Inputs-Board
+
+
 //External code citation [1]
 //Title: Grove - Gesture v1.0
 //Author:Seeed Wiki
@@ -8,7 +10,7 @@
 #include "paj7620.h"
 
 #define GES_REACTION_TIME       500             // You can adjust the reaction time according to the actual circumstance.
-#define GES_ENTRY_TIME          800             // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s). 
+#define GES_ENTRY_TIME          800             // When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s).
 #define GES_QUIT_TIME           1000
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 int red_light_pin= 11;
@@ -23,7 +25,7 @@ int flag =0;
 const long interval = 500;
 void setup() {
    uint8_t data = 0;
-  uint8_t error = 0; 
+  uint8_t error = 0;
   	//initialises components specified pin that is connected to the arduino board.
   pinMode(red_light_pin, OUTPUT);
   pinMode(laser_diode,OUTPUT);
@@ -31,13 +33,13 @@ void setup() {
   pinMode(button,INPUT_PULLUP);
   pinMode(hand_gesture,INPUT);
   Serial.begin(9600);
-  
+
 //External code citation [1]
 //Title: Grove - Gesture v1.0
 //Author:Seeed Wiki
 //Availability:https://seeeddoc.github.io/Grove-Gesture_v1.0/
  error = paj7620Init();          // initialize Paj7620 registers
-    if (error) 
+    if (error)
     {
         Serial.print("INIT ERROR,CODE:");
         Serial.println(error);
@@ -53,15 +55,15 @@ void setup() {
 
 //The first interrupt uses a button which turns of the red LED as well as the buzzer when it is pushed.
   attachInterrupt(digitalPinToInterrupt(button),shutdown_lasertrip_alarm,CHANGE);
-  
- //The second interrupt is what utilises the hand sensor  which will disable the alarm system consisting of the red LED as well as the bizzer when it detect a specifed gesture. 
+
+ //The second interrupt is what utilises the hand sensor  which will disable the alarm system consisting of the red LED as well as the bizzer when it detect a specifed gesture.
   attachInterrupt(digitalPinToInterrupt(hand_gesture),disable_alarm,CHANGE);
 
 }
 
 void loop() {
-  
- 
+
+
  //This measures time from the begining of the loop.
 unsigned long currentMillis = millis();
 //Activates the laser diode. Laser is pointed at the LDR(light dependent resistor).
@@ -73,12 +75,12 @@ Serial.println(ldr_value);
 //we put another condition where currentMillis must be greater than our interval time(we set at 500ms here). We do this  because when the loop is starting up intially the ldr values will be below the threshold because the laser diode needs a bit of time to start up.
 if(ldr_value < 800 && currentMillis > interval)
 {
- //The LED turns on as well as the buzzer if the ldr is below the threshold as well when the time passed between the loop starting is greater than the interval(500ms).	
+ //The LED turns on as well as the buzzer if the ldr is below the threshold as well when the time passed between the loop starting is greater than the interval(500ms).
  digitalWrite(red_light_pin, HIGH);
- tone(buzzer,1000); 
-  
+ tone(buzzer,1000);
+
 }
-//We have a integer called flag which is basically a boolean value, this is basically used by us to run a block of code when the hand gesture sensor is triggered. 
+//We have a integer called flag which is basically a boolean value, this is basically used by us to run a block of code when the hand gesture sensor is triggered.
  if(flag ==1)
  {
   uint8_t data = 0;
@@ -88,14 +90,14 @@ if(ldr_value < 800 && currentMillis > interval)
    if (data == GES_LEFT_FLAG) {
 	   //prints out the type of gesture as well notifying the laser trip alram willl be shut down.
 	   //Turn of red LED as well as the buzzer.
-	   //Changes our flag back to 0. So that we can wait for the next gesture event before this block of code can be run again. 
+	   //Changes our flag back to 0. So that we can wait for the next gesture event before this block of code can be run again.
     Serial.println("LEFT");
-     Serial.println("Shutting down laser trip alram");
-      digitalWrite(red_light_pin, LOW); 
+     Serial.println("Shutting down laser trip alarm");
+      digitalWrite(red_light_pin, LOW);
      noTone(buzzer);
-     flag =0;   
+     flag =0;
    }
-  
+
  }
 delay(300);
 
@@ -109,9 +111,9 @@ void disable_alarm()
   Serial.println("Hand Gesture Sensor event triggered");
   //We set the flag to 1 which will trigger the block of code in the main loop.
   //By using this kind of interrupt we can notify our program when our hand gesture event has happened. By doing this  we don't have to needlessly waste operation time checking if a event as happened in the main loop.
-  //The main loop can carry out its regular routine and only have to run our hand gesture event portion of the code in the main loop only if that event has happened. 
+  //The main loop can carry out its regular routine and only have to run our hand gesture event portion of the code in the main loop only if that event has happened.
   flag =1;
- 
+
 }
 
 
@@ -120,8 +122,8 @@ void disable_alarm()
 void shutdown_lasertrip_alarm()
 {
   Serial.println("Shut down laser trip alarm interrupt triggered");
-    //Turns off the LED light and buzzer 
-  digitalWrite(red_light_pin, LOW); 
-  noTone(buzzer); 
+    //Turns off the LED light and buzzer
+  digitalWrite(red_light_pin, LOW);
+  noTone(buzzer);
 
 }
