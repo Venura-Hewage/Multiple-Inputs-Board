@@ -80,7 +80,7 @@ if(ldr_value < 800 && currentMillis > interval)
  tone(buzzer,1000);
 
 }
-//We have a integer called flag which is basically a boolean value, this is basically used by us to run a block of code when the hand gesture sensor is triggered.
+//We have a integer called flag which is basically a boolean value, this is basically used by us to run the  block of code under the if conditon we have here  when the hand gesture sensor is triggered.
  if(flag ==1)
  {
   uint8_t data = 0;
